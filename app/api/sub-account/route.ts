@@ -20,23 +20,23 @@ export async function GET(req: Request) {
       );
     }
     const email = generateRandomEmail();
-    const subaccount_name = generateRandomEmail();
-    const res = await axios.post(
-      `${BASE_URL}/subaccounts`,
-      { email, subaccount_name },
-      {
-        headers: {
-          Authorization: `Bearer ${VULTR_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      },
-    );
+    // const subaccount_name = generateRandomEmail();
+    // const res = await axios.post(
+    //   `${BASE_URL}/subaccounts`,
+    //   { email, subaccount_name },
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${VULTR_API_KEY}`,
+    //       "Content-Type": "application/json",
+    //     },
+    //   },
+    // );
 
-    console.log(res);
-    const data = res.data;
-    console.log(data);
+    // console.log(res);
+    // const data = res.data;
+    // console.log(data);
     return NextResponse.json(
-      { message: "Service created successfully" },
+      { message: "Service created successfully", ...email },
       { status: 200 },
     );
   } catch (error: any) {
