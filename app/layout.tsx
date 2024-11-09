@@ -30,7 +30,6 @@ export default async function RootLayout({
 }>) {
   const session = await getSession();
   const user = session?.user;
-  console.log(user);
 
   if (!user) {
     redirect("/api/auth/login");
