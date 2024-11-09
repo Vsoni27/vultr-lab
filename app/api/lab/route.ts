@@ -36,13 +36,17 @@ export async function POST(req: Request) {
     }
 
     let steps: IStep[];
+    let limits: number[];
 
     if (serviceExists.id === 0) {
       steps = BLOCK_STORAGE_STEPS;
+      limits = [1];
     } else if (serviceExists.id === 1) {
       steps = MANAGED_DATABASE_STEPS;
+      limits = [1];
     } else if (serviceExists.id === 2) {
       steps = COMPUTE_INSTANCE_STEPS;
+      limits = [1];
     } else {
       return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
     }
@@ -52,7 +56,7 @@ export async function POST(req: Request) {
     const lab = new Lab({
       steps: steps,
       id: totalLabs.length + 1,
-      name,
+      name: serviceExists.name,
       isActive: true,
     });
 
@@ -62,6 +66,75 @@ export async function POST(req: Request) {
       { message: "Service created successfully", steps },
       { status: 200 },
     );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message });
+  }
+}
+
+export async function GET(req: Request) {
+  try {
+    connectToDatabase();
+    const ip = req.headers.get("x-forwarded-for");
+    if (!ip) {
+      return NextResponse.json({ message: "No IP address found" }, { status: 400 });
+    }
+
+    if (!rateLimiter(ip)) {
+      return NextResponse.json(
+        { message: "Too many requests. Try Again Later" },
+        {
+          status: 429,
+        },
+      );
+    }
+
+    const url = new URL(req.url);
+    const id = url.searchParams.get("id");
+
+    const lab = await Lab.findOne({ id });
+
+    if (!lab) {
+      return NextResponse.json({ message: "Lab does not exist" }, { status: 400 });
+    }
+
+    return NextResponse.json(
+      { message: "Lab fetched successfully", lab },
+      { status: 200 },
+    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message });
+  }
+}
+
+export async function UPDATE(req: Request) {
+  try {
+    const ip = req.headers.get("x-forwarded-for");
+    if (!ip) {
+      return NextResponse.json({ message: "No IP address found" }, { status: 400 });
+    }
+
+    if (!rateLimiter(ip)) {
+      return NextResponse.json(
+        { message: "Too many requests. Try Again Later" },
+        {
+          status: 429,
+        },
+      );
+    }
+
+    const body = await req.json();
+    const { id } = body;
+
+    const lab = await Lab.findOne({ id });
+
+    if (!lab) {
+      return NextResponse.json({ message: "Lab does not exist" }, { status: 400 });
+    }
+
+    lab.steps = body.steps;
+    await lab.save();
+
+    return NextResponse.json({ message: "Lab updated successfully" }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message });
   }
