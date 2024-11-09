@@ -1,12 +1,13 @@
 import { NextApiRequest } from "next";
 import { SERVICES } from "../../../lib/constants";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import MANAGED_DATABSE_STEPS from "../../../lib/labSteps/managedDatabases";
 import BLOCK_STORAGE_STEPS from "../../../lib/labSteps/blockStorage";
 import { IStep } from "@/db/labSchema";
 
-export async function POST(req: NextApiRequest) {
-  const { name } = req.body;
+export async function POST(req: Request) {
+  const body = await req.json();
+  const { name } = body;
 
   const serviceExists = SERVICES.find((s) => s.name === name);
 
