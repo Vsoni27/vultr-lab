@@ -71,6 +71,40 @@ export async function POST(req: Request) {
   }
 }
 
+export async function GET(req: Request) {
+  try {
+    const ip = req.headers.get("x-forwarded-for");
+    if (!ip) {
+      return NextResponse.json({ message: "No IP address found" }, { status: 400 });
+    }
+
+    if (!rateLimiter(ip)) {
+      return NextResponse.json(
+        { message: "Too many requests. Try Again Later" },
+        {
+          status: 429,
+        },
+      );
+    }
+
+    const url = new URL(req.url);
+    const id = url.searchParams.get("id");
+
+    const lab = await Lab.findOne({ id });
+
+    if (!lab) {
+      return NextResponse.json({ message: "Lab does not exist" }, { status: 400 });
+    }
+
+    return NextResponse.json(
+      { message: "Lab fetched successfully", lab },
+      { status: 200 },
+    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message });
+  }
+}
+
 export async function UPDATE(req: Request) {
   try {
     const ip = req.headers.get("x-forwarded-for");
