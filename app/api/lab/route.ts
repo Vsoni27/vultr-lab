@@ -73,6 +73,7 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
+    connectToDatabase();
     const ip = req.headers.get("x-forwarded-for");
     if (!ip) {
       return NextResponse.json({ message: "No IP address found" }, { status: 400 });

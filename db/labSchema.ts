@@ -41,6 +41,6 @@ const labSchema: Schema<ILab> = new Schema({
   limits: [Number],
 });
 
-export const Step = mongoose.model("Step", stepSchema);
+export const Step = mongoose.models.Step || mongoose.model("Step", stepSchema);
 
-export const Lab = mongoose.model("Lab", labSchema);
+export const Lab = mongoose.models.Lab || mongoose.model("Lab", labSchema);
