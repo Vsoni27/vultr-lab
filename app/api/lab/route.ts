@@ -1,9 +1,9 @@
 import { NextApiRequest } from "next";
 import { SERVICES } from "../../../lib/constants";
 import { NextRequest, NextResponse } from "next/server";
-import MANAGED_DATABSE_STEPS from "../../../lib/labSteps/managedDatabases";
+import MANAGED_DATABASE_STEPS from "../../../lib/labSteps/managedDatabases";
 import BLOCK_STORAGE_STEPS from "../../../lib/labSteps/blockStorage";
-import { IStep } from "@/db/labSchema";
+import { IStep, Lab } from "@/db/labSchema";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -20,10 +20,22 @@ export async function POST(req: Request) {
   if (serviceExists.id === 0) {
     steps = BLOCK_STORAGE_STEPS;
   } else if (serviceExists.id === 1) {
-    steps = MANAGED_DATABSE_STEPS;
+    steps = MANAGED_DATABASE_STEPS;
   } else {
     return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
   }
+
+  const totalLabs = await Lab.find();
+
+  const lab = new Lab({
+    steps: steps,
+    id: totalLabs.length + 1,
+    name,
+    isActive: true,
+  });
+
+  await lab.save();
+
   return NextResponse.json(
     { message: "Service created successfully", steps },
     { status: 200 },
