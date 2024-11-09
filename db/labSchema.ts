@@ -39,8 +39,6 @@ const labSchema: Schema<ILab> = new Schema({
   steps: [stepSchema],
 });
 
-export const Step: Model<IStep> =
-  mongoose.models.Step || mongoose.model<IStep>("Step", stepSchema);
+export const Step = mongoose.model("Step", stepSchema);
 
-export const Lab: Model<ILab> =
-  mongoose.models.User || mongoose.model<ILab>("Lab", labSchema);
+export const Lab = mongoose.model("Lab", labSchema);
