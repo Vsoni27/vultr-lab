@@ -5,10 +5,25 @@ import BLOCK_STORAGE_STEPS from "../../../lib/labSteps/blockStorage";
 import COMPUTE_INSTANCE_STEPS from "../../../lib/labSteps/computeInstance";
 import { IStep, Lab } from "@/db/labSchema";
 import { connectToDatabase } from "@/db/connectMongo";
+import { rateLimiter } from "@/lib/rateLimiter";
 
 export async function POST(req: Request) {
   try {
     connectToDatabase();
+    const ip = req.headers.get("x-forwarded-for");
+    if (!ip) {
+      return NextResponse.json({ message: "No IP address found" }, { status: 400 });
+    }
+
+    if (!rateLimiter(ip)) {
+      return NextResponse.json(
+        { message: "Too many requests. Try Again Later" },
+        {
+          status: 429,
+        },
+      );
+    }
+
     const body = await req.json();
     const { name } = body;
 

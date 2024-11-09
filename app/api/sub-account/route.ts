@@ -1,10 +1,24 @@
 import { BASE_URL, VULTR_API_KEY } from "@/lib/constants";
+import { rateLimiter } from "@/lib/rateLimiter";
 import { generateRandomEmail } from "@/lib/utils";
 import axios from "axios";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const ip = req.headers.get("x-forwarded-for");
+    if (!ip) {
+      return NextResponse.json({ message: "No IP address found" }, { status: 400 });
+    }
+
+    if (!rateLimiter(ip)) {
+      return NextResponse.json(
+        { message: "Too many requests. Try Again Later" },
+        {
+          status: 429,
+        },
+      );
+    }
     const email = generateRandomEmail();
     const subaccount_name = generateRandomEmail();
     const res = await axios.post(
