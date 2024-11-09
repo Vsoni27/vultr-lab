@@ -25,9 +25,9 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name } = body;
+    const { id } = body;
 
-    const serviceExists = SERVICES.find((s) => s.name === name);
+    const serviceExists = SERVICES.find((s) => s.id === id);
 
     console.log(serviceExists);
 

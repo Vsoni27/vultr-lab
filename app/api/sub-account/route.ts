@@ -26,7 +26,7 @@ export async function GET(req: Request) {
       { email, subaccount_name },
       {
         headers: {
-          Authorization: `Bearer IPBDPGBA2K6JRDA6XXLFOUWSRF6HBMWJGSTA`,
+          Authorization: `Bearer ${VULTR_API_KEY}`,
           "Content-Type": "application/json",
         },
       },
