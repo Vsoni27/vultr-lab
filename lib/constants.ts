@@ -12,4 +12,9 @@ export const SERVICES: IServiceType[] = [
     name: "MySQL",
     id: 1,
   },
+  {
+    category: "Compute",
+    name: "New Instance",
+    id: 2,
+  },
 ];

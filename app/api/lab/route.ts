@@ -2,6 +2,7 @@ import { SERVICES } from "../../../lib/constants";
 import { NextResponse } from "next/server";
 import MANAGED_DATABASE_STEPS from "../../../lib/labSteps/managedDatabases";
 import BLOCK_STORAGE_STEPS from "../../../lib/labSteps/blockStorage";
+import COMPUTE_INSTANCE_STEPS from "../../../lib/labSteps/computeInstance";
 import { IStep, Lab } from "@/db/labSchema";
 import { connectToDatabase } from "@/db/connectMongo";
 
@@ -25,6 +26,8 @@ export async function POST(req: Request) {
       steps = BLOCK_STORAGE_STEPS;
     } else if (serviceExists.id === 1) {
       steps = MANAGED_DATABASE_STEPS;
+    } else if (serviceExists.id === 2) {
+      steps = COMPUTE_INSTANCE_STEPS;
     } else {
       return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
     }
