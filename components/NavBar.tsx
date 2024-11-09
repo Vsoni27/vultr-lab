@@ -57,8 +57,13 @@ export default function NavBar({
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <LogOut />
-              <span onClick={() => redirect("/api/auth/login")}>Log out</span>
+              <LogOut height={18} />
+              <span
+                onClick={() => (window.location.href = "/api/auth/logout")}
+                className="cursor-pointer"
+              >
+                Log out
+              </span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

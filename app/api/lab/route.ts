@@ -4,8 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 import MANAGED_DATABASE_STEPS from "../../../lib/labSteps/managedDatabases";
 import BLOCK_STORAGE_STEPS from "../../../lib/labSteps/blockStorage";
 import { IStep, Lab } from "@/db/labSchema";
+import { connectToDatabase } from "@/db/connectMongo";
 
 export async function POST(req: Request) {
+  connectToDatabase()
   const body = await req.json();
   const { name } = body;
 

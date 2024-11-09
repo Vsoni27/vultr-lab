@@ -5,6 +5,7 @@ import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { getSession } from "@auth0/nextjs-auth0";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/NavBar";
+import { UserDetailsType } from "@/lib/types";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,6 +36,13 @@ export default async function RootLayout({
     redirect("/api/auth/login");
   }
 
+  const UserDetails: UserDetailsType = {
+    picture: user.picture,
+    name: user.name,
+    username: user.nickname,
+    email: user.email,
+  };
+
   return (
     <html lang="en">
       <UserProvider>
@@ -42,7 +50,7 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <div className="flex flex-col">
-            <NavBar picture = {user.picture} name = {user.name}/>
+            <NavBar picture={user.picture} name={user.name} />
             {children}
           </div>
         </body>
