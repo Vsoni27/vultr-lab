@@ -108,6 +108,8 @@ export async function GET(req: Request) {
 
 export async function UPDATE(req: Request) {
   try {
+    connectToDatabase();
+
     const ip = req.headers.get("x-forwarded-for");
     if (!ip) {
       return NextResponse.json({ message: "No IP address found" }, { status: 400 });
@@ -142,6 +144,7 @@ export async function UPDATE(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    connectToDatabase();
     const ip = req.headers.get("x-forwarded-for");
     if (!ip) {
       return NextResponse.json({ message: "No IP address found" }, { status: 400 });
