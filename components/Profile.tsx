@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { UserDetailsType } from "@/lib/types";
 import Image from "next/image";
+import Link from "next/link";
 
 interface TestUserType {
   message: string;
@@ -29,6 +30,9 @@ export default function Profile() {
           </p>
           <p className="text-blue-600 text-md  mb-2 font-bold">Password</p>
           <p className="text-gray-700 text-lg font-bold">testpassword1645</p>
+          <Link href="https://www.vultr.com/" target="_blank">
+            <Button className="mt-8">Go to vultr</Button>
+          </Link>
         </CardContent>
       </Card>
     </div>
