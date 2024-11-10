@@ -63,7 +63,7 @@ export async function POST(req: Request) {
     await lab.save();
 
     return NextResponse.json(
-      { message: "Service created successfully", steps },
+      { message: "Service created successfully", lab },
       { status: 200 },
     );
   } catch (error: any) {
