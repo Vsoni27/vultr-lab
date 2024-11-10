@@ -4,6 +4,7 @@ import { APP_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Progress } from "@/components/ui/progress";
 
 interface Step {
   title: string;
@@ -35,7 +36,6 @@ const CourseDetails = ({ params }: { params: Promise<{ id: string }> }) => {
         const stepData = response.data.lab.steps;
         setSteps(stepData);
         console.log(stepData);
-
       } catch (error) {
         console.log(error);
       } finally {
@@ -47,10 +47,11 @@ const CourseDetails = ({ params }: { params: Promise<{ id: string }> }) => {
   }, []);
 
   if (loading) {
-    return
-    <div className="p-8 bg-slate-900 min-h-screen">
-
-      Loading...</div>;
+    return (
+      <div className="p-8 bg-slate-900 min-h-screen">
+        <Progress />
+      </div>
+    );
   } else
     return (
       <div className="p-8 bg-slate-900 min-h-screen">
@@ -60,7 +61,9 @@ const CourseDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             key={item.title}
             className={cn(
               "p-4 border rounded-md my-4 flex items-center",
-              item.isDone ? "bg-green-500 text-white" : "bg-slate-800 text-white"
+              item.isDone
+                ? "bg-green-500 text-white"
+                : "bg-slate-800 text-white"
             )}
           >
             <input
@@ -84,7 +87,6 @@ const CourseDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             <div>
               <h2 className="text-lg font-semibold">{item.title}</h2>
               <p className="text-sm mt-2">{item.description}</p>
-
             </div>
           </div>
         ))}
