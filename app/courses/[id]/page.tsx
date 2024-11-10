@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 interface Step {
   title: string;
@@ -13,52 +14,81 @@ interface ParamsProps {
   params: { id: string };
 }
 
-const CourseDetails = async ({ params }: ParamsProps) => {
-  console.log(params.id);
-  const id = params.id;
+const CourseDetails = ({ params }: ParamsProps) => {
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const response = await axios.get("http://localhost:3000/api/lab", {
-    params: {
-      id: id,
-    },
-  });
-  console.log(response.data);
-  const stepData = response.data.lab.steps;
-  console.log(stepData);
+  useEffect(() => {
+    async function fetch() {
+      try {
+        setLoading(true);
+        console.log(params.id);
+        const id = params.id;
 
-  return (
+        const response = await axios.get("http://localhost:3000/api/lab", {
+          params: {
+            id: id,
+          },
+        });
+        console.log(response.data);
+        const stepData = response.data.lab.steps;
+        setSteps(stepData);
+        console.log(stepData);
+
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetch();
+  }, []);
+
+  if (loading) {
+    return
     <div className="p-8 bg-slate-900 min-h-screen">
-      <h1 className="text-white text-2xl mb-4">Steps</h1>
-      {stepData.map((item: Step) => (
-        <div
-          key={item.title}
-          className={cn(
-            "p-4 border rounded-md my-4 flex items-center",
-            item.isDone ? "bg-green-500 text-white" : "bg-slate-800 text-white"
-          )}
-        >
-          <input
-            type="checkbox"
-            checked={item.isDone}
-            onChange={() => console.log("checked")}
-            className="mr-4"
-          />
-          <div>
-            <h2 className="text-lg font-semibold">{item.title}</h2>
-            <p className="text-sm mt-2">{item.description}</p>
-            <span
-              className={cn(
-                "inline-block mt-4 px-2 py-1 rounded",
-                item.isDone ? "bg-green-700" : "bg-slate-600"
-              )}
-            >
-              {item.isDone ? "Completed" : "In Progress"}
-            </span>
+
+      Loading...</div>;
+  } else
+    return (
+      <div className="p-8 bg-slate-900 min-h-screen">
+        <h1 className="text-white text-2xl mb-4">Steps</h1>
+        {steps.map((item: Step) => (
+          <div
+            key={item.title}
+            className={cn(
+              "p-4 border rounded-md my-4 flex items-center",
+              item.isDone ? "bg-green-500 text-white" : "bg-slate-800 text-white"
+            )}
+          >
+            <input
+              type="checkbox"
+              checked={item.isDone}
+              onChange={async () => {
+                try {
+                  item.isDone = !item.isDone;
+                  setSteps([...steps]);
+
+                  const updateSteps = await axios.put("http://localhost:3000/api/lab", {
+                    id: params.id,
+                    steps: steps,
+                  });
+                } catch (error) {
+                  console.log(error);
+                }
+              }}
+              className="mr-4 p-16"
+            />
+            <div>
+              <h2 className="text-lg font-semibold">{item.title}</h2>
+              <p className="text-sm mt-2">{item.description}</p>
+
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
-  );
+        ))}
+      </div>
+    );
 };
 
 export default CourseDetails;
