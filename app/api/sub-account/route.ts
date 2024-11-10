@@ -29,6 +29,7 @@ export async function GET(req: Request) {
       permissions = ["objstore"];
     }
     if (id === 1) {
+      s;
       permissions = ["api"];
     }
     if (id === 2) {
@@ -45,6 +46,12 @@ export async function GET(req: Request) {
         acls: permissions,
       }),
     });
+
+    if (response.status !== 200) {
+      return NextResponse.json({ message: "Error creating user" }, { status: 500 });
+    }
+
+    console.log(response.data);
 
     // const subaccount_name = generateRandomEmail();
     // const res = await axios.post(
