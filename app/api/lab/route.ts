@@ -100,17 +100,13 @@ export async function GET(req: Request) {
       }
 
       let steps: IStep[];
-      let limits: number[];
 
       if (id === 0) {
         steps = BLOCK_STORAGE_STEPS;
-        limits = [1];
       } else if (id === 1) {
         steps = MANAGED_DATABASE_STEPS;
-        limits = [1];
       } else if (id === 2) {
         steps = COMPUTE_INSTANCE_STEPS;
-        limits = [1];
       } else {
         return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
       }
@@ -120,7 +116,7 @@ export async function GET(req: Request) {
         name: service.name,
         isActive: true,
         steps: steps,
-        limits: limits,
+        limits: service.limits,
       });
 
       await newLab.save();

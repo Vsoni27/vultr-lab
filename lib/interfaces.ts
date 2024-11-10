@@ -3,4 +3,5 @@ export interface IServiceType {
   category: string;
   id: number;
   description: string;
+  limits: number[];
 }

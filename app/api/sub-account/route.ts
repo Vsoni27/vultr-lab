@@ -29,7 +29,6 @@ export async function GET(req: Request) {
       permissions = ["objstore"];
     }
     if (id === 1) {
-      s;
       permissions = ["api"];
     }
     if (id === 2) {
