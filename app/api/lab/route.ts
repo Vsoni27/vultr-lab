@@ -1,4 +1,4 @@
-import { SERVICES } from "../../../lib/constants";
+import { BASE_URL, SERVICES, VULTR_API_KEY } from "../../../lib/constants";
 import { NextResponse } from "next/server";
 import MANAGED_DATABASE_STEPS from "../../../lib/labSteps/managedDatabases";
 import BLOCK_STORAGE_STEPS from "../../../lib/labSteps/blockStorage";
@@ -6,6 +6,7 @@ import COMPUTE_INSTANCE_STEPS from "../../../lib/labSteps/computeInstance";
 import { IStep, Lab } from "@/db/labSchema";
 import { connectToDatabase } from "@/db/connectMongo";
 import { rateLimiter } from "@/lib/rateLimiter";
+import axios from "axios";
 
 export async function GET(req: Request) {
   try {
@@ -133,8 +134,19 @@ export async function DELETE(req: Request) {
     if (!lab) {
       return NextResponse.json({ message: "Lab does not exist" }, { status: 400 });
     }
+    // const lab = await Lab.findOne({ id });
 
     await Lab.deleteOne({ id });
+
+    const response = await axios.patch(`${BASE_URL}/users/${lab.userId}`, {
+      headers: {
+        Authorization: `Bearer ${VULTR_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        acls: [],
+      }),
+    });
 
     return NextResponse.json({ message: "Lab deleted successfully" }, { status: 200 });
   } catch (error: any) {

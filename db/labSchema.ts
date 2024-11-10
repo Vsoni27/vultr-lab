@@ -27,6 +27,7 @@ export interface ILab extends Document {
   isActive: boolean;
   limits: number[];
   steps: IStep[];
+  userId: String;
 }
 
 const labSchema: Schema<ILab> = new Schema({
@@ -36,9 +37,9 @@ const labSchema: Schema<ILab> = new Schema({
     type: Number,
   },
   name: String,
-  isActive: Boolean,
   steps: [stepSchema],
   limits: [Number],
+  userId: String,
 });
 
 export const Step = mongoose.models.Step || mongoose.model("Step", stepSchema);
