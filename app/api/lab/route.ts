@@ -139,3 +139,36 @@ export async function UPDATE(req: Request) {
     return NextResponse.json({ error: error.message });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const ip = req.headers.get("x-forwarded-for");
+    if (!ip) {
+      return NextResponse.json({ message: "No IP address found" }, { status: 400 });
+    }
+
+    if (!rateLimiter(ip)) {
+      return NextResponse.json(
+        { message: "Too many requests. Try Again Later" },
+        {
+          status: 429,
+        },
+      );
+    }
+
+    const body = await req.json();
+    const { id } = body;
+
+    const lab = await Lab.findOne({ id });
+
+    if (!lab) {
+      return NextResponse.json({ message: "Lab does not exist" }, { status: 400 });
+    }
+
+    await Lab.deleteOne({ id });
+
+    return NextResponse.json({ message: "Lab deleted successfully" }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message });
+  }
+}
