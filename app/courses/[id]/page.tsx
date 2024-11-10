@@ -1,6 +1,5 @@
 "use client";
 
-import { APP_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useEffect, useState } from "react";
