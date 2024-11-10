@@ -26,10 +26,10 @@ export default function Profile() {
         <CardContent className="text-center">
           <p className="text-blue-600 text-md  mb-2 font-bold">Email</p>
           <p className="text-gray-700 text-lg font-bold">
-            vultr1645.void356@simplelogin.com
+            vultr1345.void356@simplelogin.com
           </p>
           <p className="text-blue-600 text-md  mb-2 font-bold">Password</p>
-          <p className="text-gray-700 text-lg font-bold">testpassword1645</p>
+          <p className="text-gray-700 text-lg font-bold">testpassword</p>
           <Link href="https://www.vultr.com/" target="_blank">
             <Button className="mt-8">Go to vultr</Button>
           </Link>
