@@ -20,7 +20,7 @@ export const SERVICES: IServiceType[] = [
     id: 1,
     description:
       "Vultr's MySQL database service is a high-performance, managed database solution that is easy to use and scale. Use this guide to manage your MySQL database needs with Vultr's MySQL service. This guide will help you get started with Vultr's MySQL service.",
-    limits: [30, 4, 11], // storage GB , memory GB, CPU cores,
+    limits: [30, 4, 1], // storage GB , memory GB, CPU cores,
   },
   {
     category: "Compute",

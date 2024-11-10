@@ -102,6 +102,16 @@ export default function CoursePage() {
                 <p className="text-slate-700 font-semibold">
                   Storage limit: {selectedItem.limits[0]} GB
                 </p>
+                {selectedItem.limits.length >= 2 && (
+                  <p className="text-slate-700 font-semibold">
+                    Memory limit: {selectedItem.limits[1]} GB
+                  </p>
+                )}
+                {selectedItem.limits.length == 3 && (
+                  <p className="text-slate-700 font-semibold">
+                    CPU cores: {selectedItem.limits[2]} vCPU
+                  </p>
+                )}
                 <DialogFooter>
                   <Link href={`/courses/${selectedItem.id}`} passHref>
                     <p className="px-4 py-2 bg-emerald-500 text-white rounded-md">
