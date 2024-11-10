@@ -17,7 +17,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="flex items-center justify-center height-screen p-4">
-      <Profile user={UserDetails} />
+      Profile Page
     </div>
   );
 }
