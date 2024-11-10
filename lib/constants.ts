@@ -4,7 +4,6 @@ export const BASE_URL = "https://api.vultr.com/v2";
 
 export const VULTR_API_KEY = process.env.NEXT_PUBLIC_VULTR_API_KEY;
 export const MONGO_URI = process.env.NEXT_PUBLIC_MONGO_URI;
-export const APP_URL = "http://localhost:3000";
 
 export const SERVICES: IServiceType[] = [
   {
@@ -21,7 +20,7 @@ export const SERVICES: IServiceType[] = [
     id: 1,
     description:
       "Vultr's MySQL database service is a high-performance, managed database solution that is easy to use and scale. Use this guide to manage your MySQL database needs with Vultr's MySQL service. This guide will help you get started with Vultr's MySQL service.",
-    limits: [1],
+    limits: [30, 4, 11], // storage GB , memory GB, CPU cores,
   },
   {
     category: "Compute",
@@ -29,6 +28,6 @@ export const SERVICES: IServiceType[] = [
     id: 2,
     description:
       "Vultr's custom compute instance service is a great way to create your own custom machines to perform your compute operations. You have a variety of options to choose from, from choosing the OS image to the size of the instance. Use this guide to get started with Vultr's custom compute instance service.",
-    limits: [1],
+    limits: [30, 4, 1], // storage GB , memory GB, CPU cores,
   },
 ];
