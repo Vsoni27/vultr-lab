@@ -1,12 +1,9 @@
-<<<<<<< HEAD
 "use client";
 
 import { APP_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-=======
-import CourseDetails from "@/components/CourseDetails";
->>>>>>> 9f9f00f45b697a04397064787a92c0bc3635443f
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 interface Step {
   title: string;
@@ -18,20 +15,18 @@ interface ParamsProps {
   params: { id: string };
 }
 
-const CourseDetailsPage = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
-  const id = (await params).id;
+const CourseDetails = ({ params }: { params: Promise<{ id: string }> }) => {
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch data on the server side
-  const response = await axios.get("http://localhost:3000/api/lab", {
-    params: { id },
-  });
+  useEffect(() => {
+    async function fetch() {
+      try {
+        const id = (await params).id;
+        setLoading(true);
+        console.log(id);
 
-<<<<<<< HEAD
-        const response = await axios.get(`${APP_URL}/api/lab`, {
+        const response = await axios.get(`/api/lab`, {
           params: {
             id: id,
           },
@@ -76,8 +71,8 @@ const CourseDetailsPage = async ({
                   item.isDone = !item.isDone;
                   setSteps([...steps]);
 
-                  const updateSteps = await axios.put(`${APP_URL}/api/lab`, {
-                    id: params.id,
+                  const updateSteps = await axios.put(`/api/lab`, {
+                    id: Number((await params).id),
                     steps: [...steps],
                   });
                 } catch (error) {
@@ -95,11 +90,6 @@ const CourseDetailsPage = async ({
         ))}
       </div>
     );
-=======
-  const steps: Step[] = response.data.lab.steps;
-
-  return <CourseDetails steps={steps} courseId={id} />;
->>>>>>> 9f9f00f45b697a04397064787a92c0bc3635443f
 };
 
-export default CourseDetailsPage;
+export default CourseDetails;
