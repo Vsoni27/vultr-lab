@@ -7,69 +7,69 @@ import { IStep, Lab } from "@/db/labSchema";
 import { connectToDatabase } from "@/db/connectMongo";
 import { rateLimiter } from "@/lib/rateLimiter";
 
-export async function POST(req: Request) {
-  try {
-    connectToDatabase();
-    const ip = req.headers.get("x-forwarded-for");
-    if (!ip) {
-      return NextResponse.json({ message: "No IP address found" }, { status: 400 });
-    }
+// export async function POST(req: Request) {
+//   try {
+//     connectToDatabase();
+//     const ip = req.headers.get("x-forwarded-for");
+//     if (!ip) {
+//       return NextResponse.json({ message: "No IP address found" }, { status: 400 });
+//     }
 
-    if (!rateLimiter(ip)) {
-      return NextResponse.json(
-        { message: "Too many requests. Try Again Later" },
-        {
-          status: 429,
-        },
-      );
-    }
+//     if (!rateLimiter(ip)) {
+//       return NextResponse.json(
+//         { message: "Too many requests. Try Again Later" },
+//         {
+//           status: 429,
+//         },
+//       );
+//     }
 
-    const body = await req.json();
-    const { id } = body;
+//     const body = await req.json();
+//     const { id } = body;
 
-    const serviceExists = SERVICES.find((s) => s.id === id);
+//     const serviceExists = SERVICES.find((s) => s.id === id);
 
-    console.log(serviceExists);
+//     console.log(serviceExists);
 
-    if (!serviceExists) {
-      return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
-    }
+//     if (!serviceExists) {
+//       return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
+//     }
 
-    let steps: IStep[];
-    let limits: number[];
+//     let steps: IStep[];
+//     let limits: number[];
 
-    if (serviceExists.id === 0) {
-      steps = BLOCK_STORAGE_STEPS;
-      limits = [1];
-    } else if (serviceExists.id === 1) {
-      steps = MANAGED_DATABASE_STEPS;
-      limits = [1];
-    } else if (serviceExists.id === 2) {
-      steps = COMPUTE_INSTANCE_STEPS;
-      limits = [1];
-    } else {
-      return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
-    }
+//     if (serviceExists.id === 0) {
+//       steps = BLOCK_STORAGE_STEPS;
+//       limits = [1];
+//     } else if (serviceExists.id === 1) {
+//       steps = MANAGED_DATABASE_STEPS;
+//       limits = [1];
+//     } else if (serviceExists.id === 2) {
+//       steps = COMPUTE_INSTANCE_STEPS;
+//       limits = [1];
+//     } else {
+//       return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
+//     }
 
-    const totalLabs = await Lab.find();
+//     const totalLabs = await Lab.find();
 
-    const lab = new Lab({
-      steps: steps,
-      id: totalLabs.length + 1,
-      name: serviceExists.name,
-      isActive: true,
-    });
+//     const lab = new Lab({
+//       steps: steps,
+//       id: totalLabs.length + 1,
+//       name: serviceExists.name,
+//       isActive: true,
+//     });
 
-    await lab.save();
+//     await lab.save();
 
-    return NextResponse.json(
-      { message: "Service created successfully", lab },
-      { status: 200 },
-    );
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message });
-  }
-}
+//     return NextResponse.json(
+//       { message: "Service created successfully", lab },
+//       { status: 200 },
+//     );
+//   } catch (error: any) {
+//     return NextResponse.json({ error: error.message });
+//   }
+// }
 
 export async function GET(req: Request) {
   try {
@@ -89,12 +89,41 @@ export async function GET(req: Request) {
     }
 
     const url = new URL(req.url);
-    const id = url.searchParams.get("id");
+    const id = Number(url.searchParams.get("id"));
 
     const lab = await Lab.findOne({ id });
 
     if (!lab) {
-      return NextResponse.json({ message: "Lab does not exist" }, { status: 400 });
+      const service = SERVICES.find((s) => s.id === id);
+      if (!service) {
+        return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
+      }
+
+      let steps: IStep[];
+      let limits: number[];
+
+      if (id === 0) {
+        steps = BLOCK_STORAGE_STEPS;
+        limits = [1];
+      } else if (id === 1) {
+        steps = MANAGED_DATABASE_STEPS;
+        limits = [1];
+      } else if (id === 2) {
+        steps = COMPUTE_INSTANCE_STEPS;
+        limits = [1];
+      } else {
+        return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
+      }
+
+      new Lab({
+        id,
+        name: service.name,
+        isActive: true,
+        steps: steps,
+        limits: limits,
+      }).save();
+
+      return NextResponse.json({ message: "Lab created successfully" }, { status: 200 });
     }
 
     return NextResponse.json(
