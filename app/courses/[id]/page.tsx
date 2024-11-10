@@ -11,7 +11,11 @@ interface ParamsProps {
   params: { id: string };
 }
 
-const CourseDetailsPage = async ({ params }: ParamsProps) => {
+const CourseDetailsPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   const id = (await params).id;
 
   // Fetch data on the server side
