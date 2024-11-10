@@ -72,7 +72,7 @@ const CourseDetails = ({ params }: ParamsProps) => {
 
                   const updateSteps = await axios.put("http://localhost:3000/api/lab", {
                     id: params.id,
-                    steps: steps,
+                    steps: [...steps],
                   });
                 } catch (error) {
                   console.log(error);
