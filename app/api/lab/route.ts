@@ -115,16 +115,18 @@ export async function GET(req: Request) {
         return NextResponse.json({ message: "Service does not exist" }, { status: 400 });
       }
 
-      new Lab({
+      const newLab = new Lab({
         id,
         name: service.name,
         isActive: true,
         steps: steps,
         limits: limits,
-      }).save();
+      });
+
+      await newLab.save();
 
       return NextResponse.json(
-        { message: "Lab created successfully", lab },
+        { message: "Lab created successfully", lab: newLab },
         { status: 200 },
       );
     }
