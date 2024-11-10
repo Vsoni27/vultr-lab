@@ -4,6 +4,7 @@ export const BASE_URL = "https://api.vultr.com/v2";
 
 export const VULTR_API_KEY = process.env.NEXT_PUBLIC_VULTR_API_KEY;
 export const MONGO_URI = process.env.NEXT_PUBLIC_MONGO_URI;
+export const APP_URL = "http://localhost:3000";
 
 export const SERVICES: IServiceType[] = [
   {

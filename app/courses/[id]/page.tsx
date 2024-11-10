@@ -1,5 +1,6 @@
 "use client";
 
+import { APP_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -25,7 +26,7 @@ const CourseDetails = ({ params }: ParamsProps) => {
         console.log(params.id);
         const id = params.id;
 
-        const response = await axios.get("http://localhost:3000/api/lab", {
+        const response = await axios.get(`${APP_URL}/api/lab`, {
           params: {
             id: id,
           },
@@ -70,7 +71,7 @@ const CourseDetails = ({ params }: ParamsProps) => {
                   item.isDone = !item.isDone;
                   setSteps([...steps]);
 
-                  const updateSteps = await axios.put("http://localhost:3000/api/lab", {
+                  const updateSteps = await axios.put(`${APP_URL}/api/lab`, {
                     id: params.id,
                     steps: [...steps],
                   });

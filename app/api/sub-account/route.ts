@@ -19,7 +19,33 @@ export async function GET(req: Request) {
         },
       );
     }
+
+    const url = new URL(req.url);
+    const id = Number(url.searchParams.get("id"));
+
+    let permissions: string[] = [];
+
+    if (id === 0) {
+      permissions = ["objstore"];
+    }
+    if (id === 1) {
+      permissions = ["api"];
+    }
+    if (id === 2) {
+      permissions = ["provisioning"];
+    }
+
     const email = generateRandomEmail();
+    const response = await axios.patch(`${BASE_URL}/users/${email.id}`, {
+      headers: {
+        Authorization: `Bearer ${VULTR_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        acls: permissions,
+      }),
+    });
+
     // const subaccount_name = generateRandomEmail();
     // const res = await axios.post(
     //   `${BASE_URL}/subaccounts`,
