@@ -27,6 +27,7 @@ export async function GET(req: Request) {
 
     const url = new URL(req.url);
     const id = Number(url.searchParams.get("id"));
+    const userId = url.searchParams.get("userId");
 
     const lab = await Lab.findOne({ id });
 
@@ -54,6 +55,7 @@ export async function GET(req: Request) {
         isActive: true,
         steps: steps,
         limits: service.limits,
+        userId,
       });
 
       await newLab.save();
