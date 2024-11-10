@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import axios from "axios";
 
@@ -31,20 +33,28 @@ const CourseDetails = async ({ params }: ParamsProps) => {
         <div
           key={item.title}
           className={cn(
-            "p-4 border rounded-md my-4",
+            "p-4 border rounded-md my-4 flex items-center",
             item.isDone ? "bg-green-500 text-white" : "bg-slate-800 text-white"
           )}
         >
-          <h2 className="text-lg font-semibold">{item.title}</h2>
-          <p className="text-sm mt-2">{item.description}</p>
-          <span
-            className={cn(
-              "inline-block mt-4 px-2 py-1 rounded",
-              item.isDone ? "bg-green-700" : "bg-slate-600"
-            )}
-          >
-            {item.isDone ? "Completed" : "In Progress"}
-          </span>
+          <input
+            type="checkbox"
+            checked={item.isDone}
+            onChange={() => console.log("checked")}
+            className="mr-4"
+          />
+          <div>
+            <h2 className="text-lg font-semibold">{item.title}</h2>
+            <p className="text-sm mt-2">{item.description}</p>
+            <span
+              className={cn(
+                "inline-block mt-4 px-2 py-1 rounded",
+                item.isDone ? "bg-green-700" : "bg-slate-600"
+              )}
+            >
+              {item.isDone ? "Completed" : "In Progress"}
+            </span>
+          </div>
         </div>
       ))}
     </div>
