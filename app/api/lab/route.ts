@@ -123,7 +123,10 @@ export async function GET(req: Request) {
         limits: limits,
       }).save();
 
-      return NextResponse.json({ message: "Lab created successfully" }, { status: 200 });
+      return NextResponse.json(
+        { message: "Lab created successfully", lab },
+        { status: 200 },
+      );
     }
 
     return NextResponse.json(
